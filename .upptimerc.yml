@@ -2,10 +2,16 @@ owner: zakarias666
 repo: status
 
 sites:
-  - name: Website
-    url: https://zbj.dk
+  - name: API
+    url: https://api.zbj.dk/v1/health/
+  - name: Cloud
+    url: https://cloud.zbj.dk/status.php
+  - name: CDN
+    url: https://cdn.zbj.dk/
+  - name: Dev
+    url: https://dev.zbj.dk/
+  - name: Test
+    url: https://test.zbj.dk/
 
-# Response slower than this (ms) marks a site "degraded" instead of "up".
-# assignees:
 # status-website is intentionally omitted — the status page is the custom
 # widget site in docs/, not Upptime's built-in Svelte site.
