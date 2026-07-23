@@ -23,7 +23,7 @@
 /* dark tokens, shared by auto-dark and forced-dark */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1e1e1e;
+    --bg: #191919;
     --text: rgba(255, 255, 255, .92);
     --text-2: rgba(255, 255, 255, .55);
     --text-3: rgba(255, 255, 255, .38);
@@ -155,18 +155,6 @@ body {
 .gauge .sub { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
 .gauge .subname { font-size: 13px; font-weight: 500; color: var(--text); }
 .gauge .sub .mono { font-size: 12px; }
-
-/* footer */
-.foot {
-  display: flex; align-items: center; gap: 6px;
-  margin-top: 13px; font-size: 11px; color: var(--text-3);
-}
-.foot .tick { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); flex: none; }
-.foot .brand {
-  margin-left: auto; font-family: var(--font-mono);
-  letter-spacing: .02em; color: var(--text-3); text-decoration: none;
-}
-.foot .brand:hover { color: var(--text-2); }
 
 /* states */
 .loading { color: var(--text-3); font-size: 13px; padding: 6px 0; }

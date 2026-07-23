@@ -4,7 +4,6 @@
 (function () {
   var CFG = window.STATUS_CONFIG || {};
   var SUMMARY_URL = CFG.summaryUrl;
-  var BRAND = CFG.brand || location.host;
 
   // ?theme=light|dark forces a mode; default follows OS via CSS.
   var params = new URLSearchParams(location.search);
@@ -97,18 +96,6 @@
     return '<div class="bars">' + cells.join("") + "</div>";
   }
 
-  function relTime(date) {
-    var s = Math.round((Date.now() - date) / 1000);
-    if (s < 60) return s + "s ago";
-    if (s < 3600) return Math.round(s / 60) + "m ago";
-    return Math.round(s / 3600) + "h ago";
-  }
-
-  function footer(fetchedAt) {
-    return '<div class="foot"><span class="tick"></span>Updated ' + relTime(fetchedAt) +
-      '<a class="brand" href="https://' + esc(BRAND) + '" target="_blank" rel="noopener">' + esc(BRAND) + '</a></div>';
-  }
-
   function banner(o, bigVal, bigLbl) {
     var m = OVERALL[o];
     return '<div class="banner s-' + o + '"><span class="dot"></span>' +
@@ -135,34 +122,33 @@
     return '<div class="rows">' + rows + "</div>";
   }
 
-  function render(widget, sites, fetchedAt) {
+  function render(widget, sites) {
     var o = overall(sites);
     if (widget === "overview") {
       return banner(o, fmtPct(meanUptime(sites, "uptimeMonth")), "30-day uptime") +
-        '<div class="hr"></div>' + serviceRows(sites, "status") + footer(fetchedAt);
+        '<div class="hr"></div>' + serviceRows(sites, "status");
     }
     if (widget === "services") {
-      return serviceRows(sites, "status") + footer(fetchedAt);
+      return serviceRows(sites, "status");
     }
     if (widget === "response") {
-      return serviceRows(sites, "response") + footer(fetchedAt);
+      return serviceRows(sites, "response");
     }
     if (widget === "gauge") {
       var mean = meanUptime(sites, "uptimeMonth");
       var up = sites.filter(function (s) { return s.status === "up"; }).length;
       var m = OVERALL[o];
       return '<div class="gauge"><div class="ring s-' + o + '">' + donut(mean, o) +
-        '<div class="center"><div class="pctval">' + (mean == null ? "—" : mean.toFixed(2) + "%") +
+        '<div class="center"><div class="pctval">' + (mean == null ? "—" : Math.round(mean) + "%") +
         '</div><div class="pctlbl">30-day uptime</div></div></div>' +
         '<div class="sub s-' + o + '"><span class="dot"></span>' +
         '<span class="subname">' + m.name + '</span>' +
-        '<span class="mono"><b>' + up + "</b>/" + sites.length + "</span></div></div>" +
-        footer(fetchedAt);
+        '<span class="mono"><b>' + up + "</b>/" + sites.length + "</span></div></div>";
     }
     if (widget === "uptime") {
       return banner(o, fmtPct(meanUptime(sites, "uptimeMonth")), "uptime") +
         '<div style="height:12px"></div>' + dayCells(sites, 30) +
-        '<div class="axis"><span>30d ago</span><span>today</span></div>' + footer(fetchedAt);
+        '<div class="axis"><span>30d ago</span><span>today</span></div>';
     }
     return "";
   }
@@ -176,7 +162,7 @@
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (sites) {
         if (!Array.isArray(sites)) throw new Error("bad data");
-        root.innerHTML = render(widget, sites, Date.now());
+        root.innerHTML = render(widget, sites);
       })
       .catch(function () {
         if (!root.dataset.loaded) root.innerHTML = '<div class="err">Couldn’t reach status data.</div>';
