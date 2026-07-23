@@ -1,0 +1,156 @@
+/* status.zbj.dk — embeddable status widgets
+   Theme mirrors Notion's own tokens. Follows OS light/dark by default;
+   ?theme=light | ?theme=dark forces a mode (set on <html> by widget.js). */
+
+:root {
+  color-scheme: light dark;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.4, 0, .2, 1);
+
+  /* light (Notion light) */
+  --bg: #ffffff;
+  --text: #37352f;
+  --text-2: rgba(55, 53, 47, .65);
+  --text-3: rgba(55, 53, 47, .45);
+  --border: rgba(55, 53, 47, .10);
+  --ok: #1a9d5f;   --ok-soft: rgba(26, 157, 95, .12);
+  --warn: #bf7d10; --warn-soft: rgba(191, 125, 16, .13);
+  --down: #d0392b; --down-soft: rgba(208, 57, 43, .12);
+  --idle: #9a9a97; --idle-soft: rgba(154, 154, 151, .14);
+}
+
+/* dark tokens, shared by auto-dark and forced-dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1e1e;
+    --text: rgba(255, 255, 255, .92);
+    --text-2: rgba(255, 255, 255, .55);
+    --text-3: rgba(255, 255, 255, .38);
+    --border: rgba(255, 255, 255, .10);
+    --ok: #3ecf8e;   --ok-soft: rgba(62, 207, 142, .15);
+    --warn: #e3b341; --warn-soft: rgba(227, 179, 65, .16);
+    --down: #f07167; --down-soft: rgba(240, 113, 103, .16);
+    --idle: #8a8a87; --idle-soft: rgba(138, 138, 135, .16);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --text: rgba(255, 255, 255, .92);
+  --text-2: rgba(255, 255, 255, .55);
+  --text-3: rgba(255, 255, 255, .38);
+  --border: rgba(255, 255, 255, .10);
+  --ok: #3ecf8e;   --ok-soft: rgba(62, 207, 142, .15);
+  --warn: #e3b341; --warn-soft: rgba(227, 179, 65, .16);
+  --down: #f07167; --down-soft: rgba(240, 113, 103, .16);
+  --idle: #8a8a87; --idle-soft: rgba(138, 138, 135, .16);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  padding: 16px 18px;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* status color classes */
+.s-ok   { color: var(--ok); }
+.s-warn { color: var(--warn); }
+.s-down { color: var(--down); }
+.s-idle { color: var(--idle); }
+
+.dot {
+  position: relative; flex: none;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: currentColor;
+}
+.dot::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1.5px solid currentColor; opacity: .28;
+  animation: ping 2.4s var(--ease) infinite;
+}
+.s-idle .dot::after { animation: none; opacity: 0; }
+@keyframes ping {
+  0%   { transform: scale(.75); opacity: .5; }
+  70%, 100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* header banner */
+.banner { display: flex; align-items: center; gap: 12px; }
+.banner .dot { width: 11px; height: 11px; }
+.banner-txt { min-width: 0; }
+.banner-txt h1 {
+  margin: 0; font-size: 16px; font-weight: 600;
+  letter-spacing: -.01em; color: var(--text); line-height: 1.25;
+}
+.banner-txt p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-2); }
+.banner .metric { margin-left: auto; text-align: right; }
+.metric .big {
+  font-family: var(--font-mono); font-size: 20px; font-weight: 600;
+  color: var(--text); font-variant-numeric: tabular-nums; line-height: 1;
+}
+.metric .lbl {
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-3); margin-top: 4px;
+}
+
+.hr { height: 1px; background: var(--border); margin: 14px -18px; }
+
+/* service rows */
+.rows { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; gap: 11px; padding: 9px 0; }
+.row + .row { border-top: 1px solid var(--border); }
+.row .name { font-size: 13.5px; font-weight: 450; color: var(--text); }
+.row .right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.pill {
+  font-size: 11px; font-weight: 500;
+  padding: 2.5px 9px; border-radius: 999px; white-space: nowrap;
+}
+.pill.s-ok   { background: var(--ok-soft); }
+.pill.s-warn { background: var(--warn-soft); }
+.pill.s-down { background: var(--down-soft); }
+.pill.s-idle { background: var(--idle-soft); }
+.mono {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 12.5px; color: var(--text-2); white-space: nowrap;
+}
+.mono b { color: var(--text); font-weight: 600; }
+.spark { display: block; width: 74px; height: 22px; overflow: visible; }
+
+/* uptime bars */
+.bars { display: flex; gap: 2px; height: 22px; align-items: stretch; }
+.bars i { flex: 1; border-radius: 2px; background: var(--ok); opacity: .9; }
+.bars i.w { background: var(--warn); }
+.bars i.d { background: var(--down); }
+.bars i.n { background: var(--idle); opacity: .3; }
+.axis {
+  display: flex; justify-content: space-between; margin-top: 7px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
+}
+
+/* footer */
+.foot {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 13px; font-size: 11px; color: var(--text-3);
+}
+.foot .tick { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); flex: none; }
+.foot .brand {
+  margin-left: auto; font-family: var(--font-mono);
+  letter-spacing: .02em; color: var(--text-3); text-decoration: none;
+}
+.foot .brand:hover { color: var(--text-2); }
+
+/* states */
+.loading { color: var(--text-3); font-size: 13px; padding: 6px 0; }
+.err { color: var(--down); font-size: 13px; padding: 6px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot::after { animation: none; }
+}
