@@ -135,6 +135,27 @@ body {
   font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
 }
 
+/* donut gauge */
+.gauge { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 6px 0 2px; }
+.ring { position: relative; width: 148px; height: 148px; }
+.ring-svg { display: block; transform: rotate(-90deg); }
+.ring .center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.center .pctval {
+  font-family: var(--font-mono); font-size: 26px; font-weight: 600;
+  letter-spacing: -.02em; color: var(--text); line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.center .pctlbl {
+  font-size: 9.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--text-3); margin-top: 6px;
+}
+.gauge .sub { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+.gauge .subname { font-size: 13px; font-weight: 500; color: var(--text); }
+.gauge .sub .mono { font-size: 12px; }
+
 /* footer */
 .foot {
   display: flex; align-items: center; gap: 6px;

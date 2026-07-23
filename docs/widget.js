@@ -66,6 +66,19 @@
       '<circle cx="' + end[0].toFixed(1) + '" cy="' + end[1].toFixed(1) + '" r="2" fill="' + c + '"/></svg>';
   }
 
+  function donut(pctValue, statusClass) {
+    var r = 68, cx = 80, cy = 80, sw = 13;
+    var c = 2 * Math.PI * r;
+    var frac = Math.max(0, Math.min(100, pctValue == null ? 0 : pctValue)) / 100;
+    var off = c * (1 - frac);
+    var col = "var(--" + (statusClass === "idle" ? "idle" : statusClass) + ")";
+    var track = "var(--" + (statusClass === "idle" ? "idle" : statusClass) + "-soft)";
+    return '<svg class="ring-svg" viewBox="0 0 160 160" width="148" height="148" aria-hidden="true">' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + track + '" stroke-width="' + sw + '"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="' + sw + '" ' +
+      'stroke-linecap="round" stroke-dasharray="' + c.toFixed(2) + '" stroke-dashoffset="' + off.toFixed(2) + '"/></svg>';
+  }
+
   // aggregate dailyMinutesDown across all sites into 30 day-cells (oldest→today)
   function dayCells(sites, days) {
     var today = new Date();
@@ -133,6 +146,18 @@
     }
     if (widget === "response") {
       return serviceRows(sites, "response") + footer(fetchedAt);
+    }
+    if (widget === "gauge") {
+      var mean = meanUptime(sites, "uptimeMonth");
+      var up = sites.filter(function (s) { return s.status === "up"; }).length;
+      var m = OVERALL[o];
+      return '<div class="gauge"><div class="ring s-' + o + '">' + donut(mean, o) +
+        '<div class="center"><div class="pctval">' + (mean == null ? "—" : mean.toFixed(2) + "%") +
+        '</div><div class="pctlbl">30-day uptime</div></div></div>' +
+        '<div class="sub s-' + o + '"><span class="dot"></span>' +
+        '<span class="subname">' + m.name + '</span>' +
+        '<span class="mono"><b>' + up + "</b>/" + sites.length + "</span></div></div>" +
+        footer(fetchedAt);
     }
     if (widget === "uptime") {
       return banner(o, fmtPct(meanUptime(sites, "uptimeMonth")), "uptime") +
