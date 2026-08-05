@@ -1,7 +1,7 @@
 url: https://api.zbj.dk/v1/health/
-status: up
-code: 200
-responseTime: 396
-lastUpdated: 2026-08-04T23:59:53.899Z
+status: down
+code: 530
+responseTime: 73
+lastUpdated: 2026-08-05T16:49:07.588Z
 startTime: 2026-07-23T13:57:04.418Z
 generator: Upptime <https://github.com/upptime/upptime>
