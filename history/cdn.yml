@@ -1,7 +1,7 @@
 url: https://cdn.zbj.dk/
-status: up
-code: 200
-responseTime: 462
-lastUpdated: 2026-08-20T23:22:54.087Z
+status: down
+code: 502
+responseTime: 304
+lastUpdated: 2026-08-21T05:36:09.062Z
 startTime: 2026-07-23T13:57:05.523Z
 generator: Upptime <https://github.com/upptime/upptime>
