@@ -1,7 +1,7 @@
 url: https://cloud.zbj.dk/status.php
-status: down
-code: 530
-responseTime: 109
-lastUpdated: 2026-11-13T03:07:55.741Z
+status: up
+code: 200
+responseTime: 414
+lastUpdated: 2026-11-13T18:35:40.963Z
 startTime: 2026-07-23T13:57:04.961Z
 generator: Upptime <https://github.com/upptime/upptime>
